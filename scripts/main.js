@@ -1,12 +1,15 @@
 (function() {
 
 	const MOUSE_POINTER_ID = 255;
-	const INITIAL_LINE_LENGTH = 50;
+
+	const LINE_LENGTH = 50;
+	const RAY_SPEED = 150; // px per second
+
 	const INTERSECTION_CHECK_LINE_LENGTH = 10000;
 
 	const START_POSITION = { x: 50, y: 200 };
 
-	var borders = [
+	var obstacles = [
 		// outer
 		{ fromX: 50, fromY: 50, toX: 550, toY: 50, selected: false },
 		{ fromX: 550, fromY: 50, toX: 550, toY: 550, selected: false },
@@ -18,101 +21,126 @@
 
 	var canvas, context;
 
-	function drawBox() {
-		borders.forEach((item) => {
-			context.beginPath();
-			context.strokeStyle = (item.selected ? "red" : "gray");
-			context.moveTo(item.fromX, item.fromY);
-			context.lineTo(item.toX, item.toY);
-			context.stroke();
-		});
-	}
-
-	function drawCircle(x, y, radius, color) {
-	    context.beginPath();
-	    context.arc(x, y, radius, 0, Math.PI * 2, false);
-	    context.fillStyle = color;
-	    context.fill();
-	}
-
-	function drawLine(fromX, fromY, toX, toY, color) {
-		context.beginPath();
-		context.moveTo(fromX, fromY);
-		context.lineTo(toX, toY);
-		context.strokeStyle = color;
-		context.stroke();
-	}
-
-	function getDistance(point1, point2) {
-		return Math.sqrt(Math.abs(Math.pow(point1.y - point2.y, 2) + Math.pow(point1.x - point2.x, 2)));
-	}
-
-	function markClosestIntersectLines(pointerData) {
-		var closestBorder = null, closestIntersectionPoint = null;
-		var minimumDistance = null;
-		borders.forEach((border) => {
-			var pointOnLine = helpers.pointOnLine(START_POSITION, {x: border.fromX, y: border.fromY}, {x: border.toX, y: border.toY});
-			var intersectPoint = !pointOnLine && helpers.intersect(
-									START_POSITION.x, START_POSITION.y, pointerData.x, pointerData.y,
-									border.fromX, border.fromY, border.toX, border.toY);
-
-			if (!pointOnLine && intersectPoint) {
-				var currentDistance = getDistance(START_POSITION, intersectPoint);
-				if (!minimumDistance || minimumDistance > currentDistance) {
-					closestBorder = border;
-					closestIntersectionPoint = intersectPoint;
-				}
-			}
-
-			border.selected = false;
-		});
-
-		if (closestBorder)
-			closestBorder.selected = true;
-
-		return closestIntersectionPoint;
-	}
-
 	var app = new PLAYGROUND.Application({
 
 		create: function() {
 			canvas = this.layer.canvas;
 			context = this.layer.context;
+
+			this.pointerEvent = null;
+
+			this.currentRay = {};
+
+			this.rays = [];
+			this.fireRay = false;
+
+			this.lastFpsCounter = 0;
+			this.fpsCounter = 0;
+			this.dtCounter = 0;
+		},
+
+		step: function(dt) {
+
+			if (this.dtCounter < 1) {
+				this.dtCounter += dt;
+				this.fpsCounter++;
+			} else {
+				this.lastFpsCounter = this.fpsCounter;
+				this.dtCounter = this.dtCounter - 1;
+				this.fpsCounter = 0;
+			}
+
+			// Get current ray & intersection
+			if (this.pointerEvent) {
+				this.currentRay.angle = Math.atan2(this.pointerEvent.y - START_POSITION.y, this.pointerEvent.x - START_POSITION.x);
+				this.currentRay.x = (Math.round(START_POSITION.x + (LINE_LENGTH * Math.cos(this.currentRay.angle))));
+				this.currentRay.y = (Math.round(START_POSITION.y + (LINE_LENGTH * Math.sin(this.currentRay.angle))));
+
+				var interSectionCheck = {
+					x: Math.round(START_POSITION.x + (INTERSECTION_CHECK_LINE_LENGTH * Math.cos(this.currentRay.angle))),
+					y: Math.round(START_POSITION.y + (INTERSECTION_CHECK_LINE_LENGTH * Math.sin(this.currentRay.angle)))
+				};
+
+				var closestIntersection = helpers.markClosestIntersectLines(START_POSITION, obstacles, interSectionCheck);
+				this.currentRay.intersectionPoint = closestIntersection.point;
+				this.currentRay.intersectionObstacle = closestIntersection.obstacle;
+			}
+
+			if (this.fireRay) {
+				this.fireRay = false;
+
+				var ray = {
+					enabled: true,
+					angle: this.currentRay.angle,
+					position: START_POSITION,
+					endPosition: { x: 0, y: 0 },
+					nextIntersectionPoint: this.currentRay.intersectionPoint,
+					nextIntersectionObstacle: this.currentRay.intersectionObstacle,
+				};
+				ray.initialDistanceToObstacle = helpers.distanceBetweenTwoPoints(START_POSITION, ray.nextIntersectionPoint);
+
+				this.rays.push(ray);
+			}
+
+		    // Calculate ray positions
+		    this.rays.forEach((ray) => {
+		    	if (!ray.enabled)
+		    		return;
+
+		    	ray.position = {
+		    		x: ray.position.x + (RAY_SPEED * dt * Math.cos(ray.angle)),
+		    		y: ray.position.y + (RAY_SPEED * dt * Math.sin(ray.angle))
+		    	};
+
+		    	var maxDistance = helpers.distanceBetweenTwoPoints(ray.position, ray.nextIntersectionPoint);
+		    	var distance = Math.min(maxDistance, LINE_LENGTH);
+
+		    	if (distance < 0) {
+		    		ray.enabled = false;
+		    	}
+
+		    	ray.endPosition = {
+		    		x: ray.position.x + (distance * Math.cos(ray.angle)),
+		    		y: ray.position.y + (distance * Math.sin(ray.angle))
+		    	};
+		    });
 		},
 
 		render: function() {
 
-		    var pointerData = this.pointers[MOUSE_POINTER_ID];
-		    var intersectionPoint = null;
-		    if (pointerData) {
-				var angle = Math.atan2(pointerData.y - START_POSITION.y, pointerData.x - START_POSITION.x);
-				var toX = (Math.round(START_POSITION.x + (INITIAL_LINE_LENGTH * Math.cos(angle))));
-				var toY = (Math.round(START_POSITION.y + (INITIAL_LINE_LENGTH * Math.sin(angle))));
-
-				var interSectionCheck = {
-					x: Math.round(START_POSITION.x + (INTERSECTION_CHECK_LINE_LENGTH * Math.cos(angle))),
-					y: Math.round(START_POSITION.y + (INTERSECTION_CHECK_LINE_LENGTH * Math.sin(angle)))
-				};
-
-				intersectionPoint = markClosestIntersectLines(interSectionCheck);
-			}
-
 			// Drawing
 		    this.layer.clear("#FFFFFF");
-		    drawBox();
+		    helpers.drawObstacles(context, obstacles);
 
-		    if (pointerData) {
-				drawLine(START_POSITION.x, START_POSITION.y, toX, toY, "gray");
-				drawCircle(toX, toY, 4, "#FF4444");
+		    // Text
+		    helpers.drawText(context, 50, 30, this.lastFpsCounter, '18px Verdana', 'gray');
+
+		    // Aiming
+		    if (this.pointerEvent) {
+				helpers.drawLine(context, START_POSITION.x, START_POSITION.y, this.currentRay.x, this.currentRay.y, "gray");
+				helpers.drawCircle(context, this.currentRay.x, this.currentRay.y, 4, "#FF4444");
 		    }
 
-		    if (intersectionPoint) {
-				drawLine(toX, toY, intersectionPoint.x, intersectionPoint.y, "gray");
-		    	drawCircle(intersectionPoint.x, intersectionPoint.y, 4, "#91C8FF");
+		    if (this.currentRay.intersectionPoint) {
+				helpers.drawLine(context, this.currentRay.x, this.currentRay.y, this.currentRay.intersectionPoint.x, this.currentRay.intersectionPoint.y, "gray");
+		    	helpers.drawCircle(context, this.currentRay.intersectionPoint.x, this.currentRay.intersectionPoint.y, 4, "#91C8FF");
 		    }
 
-		    drawCircle(START_POSITION.x, START_POSITION.y, 4, "#70FFAE");
-		}
+		    // Rays
+		    this.rays.forEach((ray) => {
+		    	helpers.drawRay(context, ray, "green");
+		    });
+
+		    helpers.drawCircle(context, START_POSITION.x, START_POSITION.y, 4, "#70FFAE");
+		},
+
+		pointermove: function(event) {
+			this.pointerEvent = event;
+		},
+
+		pointerup: function(event) {
+			this.fireRay = true;
+	    },
 	});
 })();
 
