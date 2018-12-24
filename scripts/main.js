@@ -21,6 +21,7 @@
 		// inner
 		{ from: { x: 400, y: 200 }, to: { x: 400, y: 400 }, selected: false },
 		{ from: { x: 100, y: 400 }, to: { x: 400, y: 500 }, selected: false },
+		{ from: { x: 600, y: 400 }, to: { x: 900, y: 500 }, selected: false },
 	];
 
 	var canvas, context;
@@ -166,22 +167,22 @@
 
 		    // Aiming
 		    if (this.currentRay.position) {
-				helpers.drawLine(context, START_POSITION, this.currentRay.position, "gray");
+				helpers.drawLine(context, START_POSITION, this.currentRay.position, "gray", 1);
 				helpers.drawCircle(context, this.currentRay.position, 4, "#FF4444");
 		    }
 
 		    if (this.currentRay.intersectionPoint) {
-				helpers.drawLine(context, this.currentRay.position, this.currentRay.intersectionPoint, "gray");
+				helpers.drawLine(context, this.currentRay.position, this.currentRay.intersectionPoint, "gray", 1);
 		    	helpers.drawCircle(context, this.currentRay.intersectionPoint, 4, "#91C8FF");
-				helpers.drawLine(context, this.currentRay.intersectionPoint, this.currentRay.normalVectorEnd, "orange");
-				helpers.drawLine(context, this.currentRay.intersectionPoint, this.currentRay.reflectionVectorEnd, "maroon");
+				helpers.drawLine(context, this.currentRay.intersectionPoint, this.currentRay.normalVectorEnd, "orange", 1);
+				helpers.drawLine(context, this.currentRay.intersectionPoint, this.currentRay.reflectionVectorEnd, "maroon", 1);
 		    }
 
 		    // Rays
 		    this.rays.forEach((ray) => {
 		    	if (ray.enabled) {
 			    	helpers.drawRay(context, ray, "green");
-					helpers.drawLine(context, ray.intersectionPoint, ray.normalVectorEnd, "orange");
+					helpers.drawLine(context, ray.intersectionPoint, ray.normalVectorEnd, "orange", 1);
 		    	}
 		    });
 

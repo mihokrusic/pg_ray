@@ -76,11 +76,7 @@
 
     function drawObstacles(context, obstacles) {
         obstacles.forEach((item) => {
-            context.beginPath();
-            context.strokeStyle = (item.selected ? "red" : "gray");
-            context.moveTo(item.from.x, item.from.y);
-            context.lineTo(item.to.x, item.to.y);
-            context.stroke();
+            drawLine(context, item.from, item.to, (item.selected ? "red" : "gray"), 2)
         });
     };
 
@@ -105,11 +101,12 @@
         context.stroke();
     };
 
-    function drawLine(context, fromPoint, toPoint, color) {
+    function drawLine(context, fromPoint, toPoint, color, lineWidth) {
         context.beginPath();
         context.moveTo(fromPoint.x, fromPoint.y);
         context.lineTo(toPoint.x, toPoint.y);
         context.strokeStyle = color;
+        context.lineWidth = lineWidth;
         context.stroke();
     };
 
