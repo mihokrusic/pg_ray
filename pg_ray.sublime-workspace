@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"curent",
+				"currentRay"
+			],
+			[
+				"current",
+				"currentRay"
+			],
+			[
+				"pointer",
+				"pointerUpEvent"
+			],
+			[
+				"nextInter",
+				"nextIntersectionPoint"
+			],
+			[
+				"curre",
+				"currentRay"
+			],
+			[
 				"intersec",
 				"intersectionPoint"
 			],
@@ -443,6 +463,32 @@
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
+		},
+		{
+			"file": "scripts/main.js",
+			"settings":
+			{
+				"buffer_size": 7256,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/helpers.js",
+			"settings":
+			{
+				"buffer_size": 5355,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "scripts/vendor/vector.js",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
 		}
 	],
 	"build_system": "",
@@ -672,7 +718,7 @@
 	],
 	"find":
 	{
-		"height": 24.0
+		"height": 41.0
 	},
 	"find_in_files":
 	{
@@ -814,6 +860,56 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"nextIntersectionPoint",
+			" = ",
+			"x: 900",
+			": 550",
+			"x: 550",
+			"550",
+			"markClosestIntersectLines ",
+			"markClosestIntersectLines",
+			"linePoint2",
+			"linePoint1",
+			"checkSideOfLine",
+			"intersectionObstacle",
+			": function",
+			"},",
+			"closedObstacle",
+			"markClosestIntersectLines",
+			"nextIntersectionObstacle",
+			"fromx",
+			"selected",
+			"toY",
+			"toX",
+			"fromY",
+			"fromX",
+			"distanceBetweenTwoPoints",
+			"movePixels",
+			"this",
+			"this.currentRay",
+			"this.currentRay.",
+			"moveRemainder",
+			"RAY_SPEED * dt",
+			"this.intersectionPoint",
+			"this.currentRay",
+			"rays",
+			"Rays",
+			"rays",
+			".x",
+			".X",
+			"currentRay",
+			"toY",
+			"toX",
+			"angle",
+			"intersectionPoint",
+			"INITIAL_LINE_LENGTH",
+			"START_POSITION",
+			"pointonline",
+			"pointerData",
+			"border",
+			"closestBorder",
+			"borders",
+			"drawBox",
 			"ErrorInterceptor",
 			"Backdrop Click",
 			"lyout",
@@ -891,57 +987,7 @@
 			"old",
 			"k-header",
 			"10px 10px",
-			"format",
-			"requisitionGrid",
-			"sort",
-			"width",
-			"enums.req",
-			"onStatusFilterChange",
-			"desc",
-			"sort",
-			"todo",
-			"1em",
-			"target-markers",
-			"targetRangeAvg",
-			".icon-border",
-			"00C04F79EFBC",
-			"Employer",
-			"1A3956D46DE8",
-			"2EAE012631F6",
-			"937D1FB09D89",
-			"payments",
-			"drawDaysBracket",
-			"jobboost",
-			".config",
-			"config",
-			" =",
-			"Submit Payment",
-			"toastrService",
-			"<add key=\"JobHealthShowExtendOption\" value=\"false\"/>",
-			"JobHealthShowExtendOption",
-			"jobhealthshowextend",
-			"JobHealthTrackingService",
-			"trackAsUserAction",
-			"JoBoostVendorImages",
-			"JobBoostVendorImages",
-			"vendor",
-			"boost",
-			"vendor",
-			"extendoption",
-			"JobHealthShowExtendOption",
-			"extend",
-			"console",
-			"visiblebuffer",
-			".graph-styl",
-			"elementId",
-			"chart-inner",
-			"chart",
-			".job-hea",
-			"chart",
-			"this.svg",
-			"elementId",
-			"DefaultNeogovStatisticsEnabled",
-			"learn-more"
+			"format"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -966,7 +1012,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 3,
 			"sheets":
 			[
 				{
@@ -989,6 +1035,94 @@
 						"settings":
 						{
 							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "scripts/main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7256,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4171,
+								4171
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 780.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "scripts/helpers.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5355,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5125,
+								5125
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1685.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "scripts/vendor/vector.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"open_with_edit": true,
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

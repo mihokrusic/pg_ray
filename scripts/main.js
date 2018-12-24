@@ -3,20 +3,24 @@
 	const MOUSE_POINTER_ID = 255;
 
 	const LINE_LENGTH = 50;
-	const RAY_SPEED = 150; // px per second
+	const RAY_SPEED = 500; // px per second
+
+	const NORMAL_LINE_LENGTH = 50;
+	const REFLECTION_LINE_LENGTH = 100;
 
 	const INTERSECTION_CHECK_LINE_LENGTH = 10000;
 
-	const START_POSITION = { x: 50, y: 200 };
+	const START_POSITION = new Vector(500, 700);
 
 	var obstacles = [
 		// outer
-		{ fromX: 50, fromY: 50, toX: 550, toY: 50, selected: false },
-		{ fromX: 550, fromY: 50, toX: 550, toY: 550, selected: false },
-		{ fromX: 550, fromY: 550, toX: 50, toY: 550, selected: false },
-		{ fromX: 50, fromY: 550, toX: 50, toY: 50, selected: false },
+		{ from: { x: 50, y: 50 }, to: { x: 1000, y: 50 }, selected: false },
+		{ from: { x: 1000, y: 50 }, to: { x: 1000, y: 700 }, selected: false },
+		{ from: { x: 1000, y: 700 }, to: { x: 50, y: 700 }, selected: false },
+		{ from: { x: 50, y: 700 }, to: { x: 50, y: 50 }, selected: false },
 		// inner
-		{ fromX: 400, fromY: 200, toX: 400, toY: 400, selected: false },
+		{ from: { x: 400, y: 200 }, to: { x: 400, y: 400 }, selected: false },
+		{ from: { x: 100, y: 400 }, to: { x: 400, y: 500 }, selected: false },
 	];
 
 	var canvas, context;
@@ -27,9 +31,16 @@
 			canvas = this.layer.canvas;
 			context = this.layer.context;
 
-			this.pointerEvent = null;
+			this.running = true;
 
-			this.currentRay = {};
+			this.pointerEvent = null;
+			this.pointerUpEvent = null;
+
+			this.currentRay = {
+				vector: {},
+				position: {}
+			};
+
 
 			this.rays = [];
 			this.fireRay = false;
@@ -50,64 +61,102 @@
 				this.fpsCounter = 0;
 			}
 
+			if (!this.running)
+				return;
+
 			// Get current ray & intersection
 			if (this.pointerEvent) {
-				this.currentRay.angle = Math.atan2(this.pointerEvent.y - START_POSITION.y, this.pointerEvent.x - START_POSITION.x);
-				this.currentRay.x = (Math.round(START_POSITION.x + (LINE_LENGTH * Math.cos(this.currentRay.angle))));
-				this.currentRay.y = (Math.round(START_POSITION.y + (LINE_LENGTH * Math.sin(this.currentRay.angle))));
+				var angle = Math.atan2(this.pointerEvent.y - START_POSITION.y, this.pointerEvent.x - START_POSITION.x);
+				this.currentRay.vector = new Vector(Math.cos(angle), Math.sin(angle));
+		    	//console.log(angle, this.currentRay.vector);
 
-				var interSectionCheck = {
-					x: Math.round(START_POSITION.x + (INTERSECTION_CHECK_LINE_LENGTH * Math.cos(this.currentRay.angle))),
-					y: Math.round(START_POSITION.y + (INTERSECTION_CHECK_LINE_LENGTH * Math.sin(this.currentRay.angle)))
-				};
+				this.currentRay.position = this.currentRay.vector.multiplyByScalar(LINE_LENGTH).addVector(START_POSITION);
 
-				var closestIntersection = helpers.markClosestIntersectLines(START_POSITION, obstacles, interSectionCheck);
+				var interSectionCheck = this.currentRay.vector.multiplyByScalar(INTERSECTION_CHECK_LINE_LENGTH).addVector(START_POSITION);
+				var closestIntersection = helpers.getClosestIntersectionLine(START_POSITION, obstacles, interSectionCheck);
 				this.currentRay.intersectionPoint = closestIntersection.point;
-				this.currentRay.intersectionObstacle = closestIntersection.obstacle;
+				this.currentRay.nextObstacle = closestIntersection.obstacle;
+
+				if (this.currentRay.nextObstacle) {
+					this.currentRay.sideOfObstacle = helpers.checkSideOfLine(this.currentRay.nextObstacle, this.currentRay.position);
+
+			    	// Normal vector
+			    	var normalVectorSlope = helpers.slopeForTwoPoints(this.currentRay.nextObstacle.from, this.currentRay.nextObstacle.to);
+				    var normalVector = (normalVectorSlope === undefined)
+				    	? new Vector(1, 0)
+					   	: new Vector(normalVectorSlope, -1);
+
+			    	var normalVectorEnd = normalVector.multiplyByScalar(NORMAL_LINE_LENGTH).addVector(this.currentRay.intersectionPoint);
+			    	var normalSideOfObstacle = helpers.checkSideOfLine(this.currentRay.nextObstacle, normalVectorEnd);
+			    	if (this.currentRay.sideOfObstacle !== normalSideOfObstacle) {
+				    	normalVector = normalVector.multiplyByScalar(-1);
+				    	normalVectorEnd = normalVector.multiplyByScalar(NORMAL_LINE_LENGTH).addVector(this.currentRay.intersectionPoint);
+			    	}
+			    	this.currentRay.normalVector = normalVector;
+			    	this.currentRay.normalVectorEnd = normalVectorEnd;
+
+			    	// Reflection vector
+			    	var dot = helpers.dotProduct(this.currentRay.vector, normalVector);
+			    	//console.log(this.currentRay.vector, normalVector);
+
+			    	var reflectionVector = normalVector.multiplyByScalar(dot * 2).substract(this.currentRay.vector);
+			    	var reflectionVectorEnd = reflectionVector.multiplyByScalar(REFLECTION_LINE_LENGTH).substract(this.currentRay.intersectionPoint);
+			    	this.currentRay.reflectionVector = reflectionVector;
+			    	this.currentRay.reflectionVectorEnd = reflectionVectorEnd;
+				} else {
+			    	this.currentRay.normalVector = null;
+			    	this.currentRay.normalVectorEnd = null;
+			    	this.currentRay.reflectionVector = null;
+			    	this.currentRay.reflectionVectorEnd = null;
+				}
 			}
 
+
+			// Fire ray
 			if (this.fireRay) {
 				this.fireRay = false;
 
+				if (!this.currentRay.intersectionPoint || this.pointerUpEvent.button !== "left")
+					return;
+
 				var ray = {
 					enabled: true,
-					angle: this.currentRay.angle,
+					vector: this.currentRay.vector,
 					position: START_POSITION,
-					endPosition: { x: 0, y: 0 },
-					nextIntersectionPoint: this.currentRay.intersectionPoint,
-					nextIntersectionObstacle: this.currentRay.intersectionObstacle,
+					endPosition: new Vector(0, 0),
+					intersectionPoint: this.currentRay.intersectionPoint,
+					nextObstacle: this.currentRay.nextObstacle,
+					sideOfObstacle: this.currentRay.sideOfObstacle,
+					normalVector: normalVector,
+					normalVectorEnd: normalVectorEnd
 				};
-				ray.initialDistanceToObstacle = helpers.distanceBetweenTwoPoints(START_POSITION, ray.nextIntersectionPoint);
 
 				this.rays.push(ray);
 			}
+
 
 		    // Calculate ray positions
 		    this.rays.forEach((ray) => {
 		    	if (!ray.enabled)
 		    		return;
 
-		    	ray.position = {
-		    		x: ray.position.x + (RAY_SPEED * dt * Math.cos(ray.angle)),
-		    		y: ray.position.y + (RAY_SPEED * dt * Math.sin(ray.angle))
-		    	};
+				var newPosition = ray.vector.multiplyByScalar(dt * RAY_SPEED).addVector(ray.position);
 
-		    	var maxDistance = helpers.distanceBetweenTwoPoints(ray.position, ray.nextIntersectionPoint);
+		    	var maxDistance = helpers.distanceBetweenTwoPoints(newPosition, ray.intersectionPoint);
 		    	var distance = Math.min(maxDistance, LINE_LENGTH);
+				var sideOfObstacle = helpers.checkSideOfLine(ray.nextObstacle, newPosition);
 
-		    	if (distance < 0) {
+		    	if (ray.sideOfObstacle !== sideOfObstacle) {
 		    		ray.enabled = false;
+		    		return;
 		    	}
 
-		    	ray.endPosition = {
-		    		x: ray.position.x + (distance * Math.cos(ray.angle)),
-		    		y: ray.position.y + (distance * Math.sin(ray.angle))
-		    	};
+		    	ray.position = newPosition;
+		    	ray.endPosition = ray.vector.multiplyByScalar(distance).addVector(ray.position);
 		    });
 		},
 
 		render: function() {
-
 			// Drawing
 		    this.layer.clear("#FFFFFF");
 		    helpers.drawObstacles(context, obstacles);
@@ -116,22 +165,35 @@
 		    helpers.drawText(context, 50, 30, this.lastFpsCounter, '18px Verdana', 'gray');
 
 		    // Aiming
-		    if (this.pointerEvent) {
-				helpers.drawLine(context, START_POSITION.x, START_POSITION.y, this.currentRay.x, this.currentRay.y, "gray");
-				helpers.drawCircle(context, this.currentRay.x, this.currentRay.y, 4, "#FF4444");
+		    if (this.currentRay.position) {
+				helpers.drawLine(context, START_POSITION, this.currentRay.position, "gray");
+				helpers.drawCircle(context, this.currentRay.position, 4, "#FF4444");
 		    }
 
 		    if (this.currentRay.intersectionPoint) {
-				helpers.drawLine(context, this.currentRay.x, this.currentRay.y, this.currentRay.intersectionPoint.x, this.currentRay.intersectionPoint.y, "gray");
-		    	helpers.drawCircle(context, this.currentRay.intersectionPoint.x, this.currentRay.intersectionPoint.y, 4, "#91C8FF");
+				helpers.drawLine(context, this.currentRay.position, this.currentRay.intersectionPoint, "gray");
+		    	helpers.drawCircle(context, this.currentRay.intersectionPoint, 4, "#91C8FF");
+				helpers.drawLine(context, this.currentRay.intersectionPoint, this.currentRay.normalVectorEnd, "orange");
+				helpers.drawLine(context, this.currentRay.intersectionPoint, this.currentRay.reflectionVectorEnd, "maroon");
 		    }
 
 		    // Rays
 		    this.rays.forEach((ray) => {
-		    	helpers.drawRay(context, ray, "green");
+		    	if (ray.enabled) {
+			    	helpers.drawRay(context, ray, "green");
+					helpers.drawLine(context, ray.intersectionPoint, ray.normalVectorEnd, "orange");
+		    	}
 		    });
 
-		    helpers.drawCircle(context, START_POSITION.x, START_POSITION.y, 4, "#70FFAE");
+		    helpers.drawCircle(context, START_POSITION, 4, "#70FFAE");
+		},
+
+		keyup: function(event) {
+			switch (event.key) {
+				case "space":
+					this.running = !this.running;
+					break;
+			}
 		},
 
 		pointermove: function(event) {
@@ -139,6 +201,7 @@
 		},
 
 		pointerup: function(event) {
+			this.pointerUpEvent = event;
 			this.fireRay = true;
 	    },
 	});
