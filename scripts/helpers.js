@@ -74,9 +74,22 @@
 
 
 
+    function drawGrid(context, canvas) {
+        //drawLine(context, { x: 0, y: -canvas.height / 2 }, { x: 0, y: canvas.height / 2 }, "silver", .5);
+
+        for (var i = -canvas.width / 2; i <= canvas.width / 2; i+=50)
+            drawLine(context, { x: i, y: -canvas.height / 2 }, { x: i, y: canvas.height / 2 }, "silver", .5);
+
+        for (var i = -canvas.height / 2; i <= canvas.height / 2; i+=50) {
+            drawLine(context, { x: -canvas.width / 2, y: i }, { x: canvas.width / 2, y: i }, "silver", .5);
+        }
+
+        drawCircle(context, { x: 0, y: 0 }, 2, "silver");
+    };
+
     function drawObstacles(context, obstacles) {
         obstacles.forEach((item) => {
-            drawLine(context, item.from, item.to, (item.selected ? "red" : "gray"), 2)
+            drawLine(context, item.from, item.to, (item.selected ? "red" : "gray"), 2);
         });
     };
 
@@ -98,6 +111,7 @@
         context.moveTo(ray.position.x, ray.position.y);
         context.lineTo(ray.endPosition.x, ray.endPosition.y);
         context.strokeStyle = color;
+        context.lineWidth = 2;
         context.stroke();
     };
 
@@ -110,19 +124,51 @@
         context.stroke();
     };
 
-    function getClosestIntersectionLine(startPosition, obstacles, pointerData) {
+    function getNormalVector(obstacle, intersectionPoint, sideOfObstacle) {
+        var normalVectorSlope = helpers.slopeForTwoPoints(obstacle.from, obstacle.to);
+        var normalVector = (normalVectorSlope === undefined)
+            ? new Vector(1, 0)
+            : new Vector(normalVectorSlope, -1).normalize();
+
+        var normalVectorEndPosition = normalVector.multiplyByScalar(NORMAL_LINE_LENGTH).addVector(intersectionPoint);
+        var normalSideOfObstacle = helpers.checkSideOfLine(obstacle, normalVectorEndPosition);
+        if (sideOfObstacle !== normalSideOfObstacle) {
+            normalVector = normalVector.multiplyByScalar(-1).normalize();
+            normalVectorEndPosition = normalVector.multiplyByScalar(NORMAL_LINE_LENGTH).addVector(intersectionPoint);
+        }
+
+        return {
+            vector: normalVector,
+            endPoint: normalVectorEndPosition
+        }
+    };
+
+    function getReflectionVector(rayVector, normalVector, intersectionPoint) {
+        // (v + 2 * n * (-v dot n))
+        var dot = helpers.dotProduct(normalVector, rayVector.flip());
+        var reflectionVector = normalVector.multiplyByScalar(dot * 2).addVector(rayVector).normalize();
+        var reflectionVectorEndPosition = reflectionVector.multiplyByScalar(REFLECTION_LINE_LENGTH).addVector(intersectionPoint);
+
+        return {
+            vector: reflectionVector,
+            endPoint: reflectionVectorEndPosition
+        }
+    };
+
+    function getClosestIntersectionLine(startPosition, endPosition, obstacles) {
         var closestObstacle = null, closestIntersectionPoint = null;
-        var minimumDistance = null;
+        var leastDistance = null;
 
         obstacles.forEach((obstacle) => {
             var pointOnLine = helpers.isPointOnLine(startPosition, obstacle.from, obstacle.to);
             var intersectPoint = !pointOnLine && helpers.intersect(
-                                    startPosition.x, startPosition.y, pointerData.x, pointerData.y,
+                                    startPosition.x, startPosition.y, endPosition.x, endPosition.y,
                                     obstacle.from.x, obstacle.from.y, obstacle.to.x, obstacle.to.y);
 
             if (!pointOnLine && intersectPoint) {
                 var currentDistance = helpers.distanceBetweenTwoPoints(startPosition, intersectPoint);
-                if (!minimumDistance || minimumDistance > currentDistance) {
+                if ((!leastDistance || leastDistance > currentDistance) && currentDistance > MIN_DISTANCE_INTERSECTION_TRIGGER) {
+                    leastDistance = currentDistance;
                     closestObstacle = obstacle;
                     closestIntersectionPoint = intersectPoint;
                 }
@@ -150,12 +196,15 @@
 
         dotProduct: dotProduct,
 
+        drawGrid: drawGrid,
         drawObstacles: drawObstacles,
         drawText: drawText,
         drawCircle: drawCircle,
         drawRay: drawRay,
         drawLine: drawLine,
 
+        getNormalVector: getNormalVector,
+        getReflectionVector: getReflectionVector,
         getClosestIntersectionLine: getClosestIntersectionLine,
     }
 }());

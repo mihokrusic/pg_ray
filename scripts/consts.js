@@ -1,0 +1,14 @@
+window.RAY_SPEED = 150; // px per second
+
+window.RAY_LENGTH = 50;
+window.NORMAL_LINE_LENGTH = 25;
+window.REFLECTION_LINE_LENGTH = 25;
+window.INTERSECTION_CHECK_LINE_LENGTH = 10000;
+
+window.START_POSITION = new Vector(100, -100);
+
+window.RAY_MAX_BOUNCES = 5;
+
+window.MIN_DISTANCE_INTERSECTION_TRIGGER = 0.1;
+
+window.DRAW_DEBUG_LINES = false;

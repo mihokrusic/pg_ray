@@ -456,19 +456,19 @@
 	"buffers":
 	[
 		{
-			"file": "index.html",
+			"file": "scripts/main.js",
 			"settings":
 			{
-				"buffer_size": 207,
+				"buffer_size": 6905,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "scripts/main.js",
+			"file": "scripts/vector.js",
 			"settings":
 			{
-				"buffer_size": 7256,
+				"buffer_size": 500,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -477,16 +477,8 @@
 			"file": "scripts/helpers.js",
 			"settings":
 			{
-				"buffer_size": 5355,
+				"buffer_size": 5257,
 				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "scripts/vendor/vector.js",
-			"settings":
-			{
-				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		}
@@ -584,9 +576,18 @@
 	},
 	"expanded_folders":
 	[
+		"/C/_moje/__github/pg_ray",
+		"/C/_moje/__github/pg_ray/scripts",
+		"/C/_moje/__github/pg_ray/scripts/vendor"
 	],
 	"file_history":
 	[
+		"/C/_moje/__github/pg_ray/scripts/vendor/playground.js",
+		"/C/_moje/__github/pg_ray/scripts/vector.js",
+		"/C/_moje/__github/pg_ray/scripts/vendor/vector.js",
+		"/C/_moje/__github/pg_ray/scripts/helpers.js",
+		"/C/_moje/__github/pg_ray/scripts/main.js",
+		"/C/_moje/__github/pg_ray/index.html",
 		"/C/Users/mkrusic/Desktop/playground1/scripts/main.js",
 		"/C/Projects/transform/config/dev/windowsservices/InsightRecruiticsHangfireService/ConfigurationFiles/logging.config.transform",
 		"/C/Projects/transform/config/qa/windowsservices/InsightRecruiticsHangfireService/ConfigurationFiles/logging.config.transform",
@@ -708,13 +709,7 @@
 		"/C/Projects/transform/config/uat/webdata/secured/config/insight/config.cfm",
 		"/C/Projects/transform/config/staging/webdata/secured/config/insight/config.cfm",
 		"/C/Projects/transform/config/qa/webdata/secured/config/insight/config.cfm",
-		"/C/Projects/transform/config/qa2/webdata/secured/config/insight/config.cfm",
-		"/C/Projects/transform/config/dev/webdata/secured/config/insight/config.cfm",
-		"/C/Projects/transform/config/loadtest/webdata/secured/config/insight/config.cfm",
-		"/C/Projects/insight-v4/src/Neogov.Insight.sln",
-		"/C/Projects/insight-v4/src/InsightWebApp/src/app/job-health/job-health-chart/job-health-chart.helper.ts",
-		"/C/Projects/insight-v4/src/Neogov.Insight.JobHealth.Domain/Neogov.Insight.JobHealth.Domain.csproj",
-		"/C/matko/post_install.js"
+		"/C/Projects/transform/config/qa2/webdata/secured/config/insight/config.cfm"
 	],
 	"find":
 	{
@@ -860,6 +855,16 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"drawline",
+			"defaults",
+			"offsetX",
+			"translate",
+			"offsetX",
+			"transform",
+			"console.log",
+			"this.currentRay.",
+			"angle",
+			"multiplyScalar",
 			"nextIntersectionPoint",
 			" = ",
 			"x: 900",
@@ -977,17 +982,7 @@
 			"ExportGridToCsv",
 			"boost",
 			"hasPermissionToBoostJob",
-			", ",
-			"actionsTemplate",
-			"text-center",
-			"currency",
-			"kendoGridFilterCellTemplate",
-			"filterable",
-			"toggleFilters",
-			"old",
-			"k-header",
-			"10px 10px",
-			"format"
+			", "
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1012,52 +1007,24 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "index.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 207,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								37,
-								37
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "scripts/main.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7256,
+						"buffer_size": 6905,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4171,
-								4171
+								6192,
+								6080
 							]
 						],
 						"settings":
@@ -1066,10 +1033,38 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 780.0,
+						"translation.y": 1937.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "scripts/vector.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 500,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								185,
+								194
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -1078,15 +1073,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5355,
+						"buffer_size": 5257,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5125,
-								5125
+								3451,
+								3451
 							]
 						],
 						"settings":
@@ -1096,39 +1091,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1685.0,
+						"translation.y": 1035.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "scripts/vendor/vector.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"open_with_edit": true,
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
