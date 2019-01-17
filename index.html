@@ -2,12 +2,29 @@
 <html>
 	<title>pg_ray</title>
 
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 	<style>
 		canvas:focus { outline: none; }
+
+		.toolbar {
+			margin: 16px;
+		}
+		.toolbar button {
+			width: 100px;
+			margin-right: 12px;
+		}
 	</style>
 <body>
+	<div class="toolbar">
+		<button id="runPauseButton" class="btn btn-primary" onclick="runOrPause()">Run</button>
+		<button id="editButton" class="btn btn-white" onclick="edit()">Edit</button>
+	</div>
 	<canvas id="gameCanvas" tabindex="0" width="1000" height="600"></canvas>
-	<script src="scripts/vector.js"></script>
+	<script src="scripts/classes/vector.js"></script>
+	<script src="scripts/classes/state.js"></script>
+	<script src="scripts/classes/state.running.js"></script>
+	<script src="scripts/classes/state.editing.js"></script>
 	<script src="scripts/consts.js"></script>
 	<script src="scripts/helpers.js"></script>
 	<script src="scripts/main.js"></script>
