@@ -1,4 +1,4 @@
-window.RAY_SPEED = 150; // px per second
+window.RAY_SPEED = 500; // px per second
 
 window.RAY_LENGTH = 50;
 window.NORMAL_LINE_LENGTH = 25;

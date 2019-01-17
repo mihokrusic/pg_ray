@@ -4,16 +4,16 @@
 		"selected_items":
 		[
 			[
+				"pointer",
+				"pointerEvent"
+			],
+			[
 				"curent",
 				"currentRay"
 			],
 			[
 				"current",
 				"currentRay"
-			],
-			[
-				"pointer",
-				"pointerUpEvent"
 			],
 			[
 				"nextInter",
@@ -459,25 +459,7 @@
 			"file": "scripts/main.js",
 			"settings":
 			{
-				"buffer_size": 6905,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "scripts/vector.js",
-			"settings":
-			{
-				"buffer_size": 500,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "scripts/helpers.js",
-			"settings":
-			{
-				"buffer_size": 5257,
+				"buffer_size": 10777,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -577,17 +559,20 @@
 	"expanded_folders":
 	[
 		"/C/_moje/__github/pg_ray",
-		"/C/_moje/__github/pg_ray/scripts",
-		"/C/_moje/__github/pg_ray/scripts/vendor"
+		"/C/_moje/__github/pg_ray/scripts"
 	],
 	"file_history":
 	[
-		"/C/_moje/__github/pg_ray/scripts/vendor/playground.js",
-		"/C/_moje/__github/pg_ray/scripts/vector.js",
-		"/C/_moje/__github/pg_ray/scripts/vendor/vector.js",
 		"/C/_moje/__github/pg_ray/scripts/helpers.js",
-		"/C/_moje/__github/pg_ray/scripts/main.js",
+		"/C/_moje/__github/pg_ray/scripts/consts.js",
+		"/C/_moje/__github/pg_ray/scripts/state.js",
 		"/C/_moje/__github/pg_ray/index.html",
+		"/C/_moje/__github/pg_ray/scripts/vector.js",
+		"/C/Users/mkrusic/Desktop/test canvas/script.js",
+		"/C/Users/mkrusic/Desktop/test canvas 2/index.html",
+		"/C/_moje/__github/pg_ray/scripts/vendor/playground.js",
+		"/C/_moje/__github/pg_ray/scripts/vendor/vector.js",
+		"/C/_moje/__github/pg_ray/scripts/main.js",
 		"/C/Users/mkrusic/Desktop/playground1/scripts/main.js",
 		"/C/Projects/transform/config/dev/windowsservices/InsightRecruiticsHangfireService/ConfigurationFiles/logging.config.transform",
 		"/C/Projects/transform/config/qa/windowsservices/InsightRecruiticsHangfireService/ConfigurationFiles/logging.config.transform",
@@ -705,15 +690,11 @@
 		"/C/Projects/insight-v4/src/Neogov.Insight.Web/Config/appSettings.config",
 		"/C/Projects/insight-v4/src/InsightWebApp/package-lock.json",
 		"/C/Projects/insight-v4/src/InsightWebApp/karma.conf.js",
-		"/C/Projects/insight-v4/src/InsightWebApp/external/patternlibrary-neogov/package.json",
-		"/C/Projects/transform/config/uat/webdata/secured/config/insight/config.cfm",
-		"/C/Projects/transform/config/staging/webdata/secured/config/insight/config.cfm",
-		"/C/Projects/transform/config/qa/webdata/secured/config/insight/config.cfm",
-		"/C/Projects/transform/config/qa2/webdata/secured/config/insight/config.cfm"
+		"/C/Projects/insight-v4/src/InsightWebApp/external/patternlibrary-neogov/package.json"
 	],
 	"find":
 	{
-		"height": 41.0
+		"height": 24.0
 	},
 	"find_in_files":
 	{
@@ -855,6 +836,74 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"moveRight",
+			"mouseLocked",
+			"finished",
+			"first",
+			"fireray",
+			"pointerUpEvent",
+			"editFirstPoint",
+			"console",
+			"pointerUpEvent",
+			"pointerEventUp",
+			"edit",
+			"running",
+			"console.",
+			"moveSegmentAmount",
+			"console",
+			"locked",
+			"sideOfObstacle",
+			"enabled",
+			"PointPoint",
+			"reflectionVectorEnd",
+			"newSegment.vector",
+			"newSegment.normalVector",
+			"normalVector",
+			"reflection",
+			"const ",
+			"normalEndPoint",
+			"normalVectorEnd",
+			"newSegment",
+			"endPosition",
+			"normalVector",
+			"normalVectorEndPosition",
+			"normalVector",
+			"newSegment",
+			"newSegment.nextObstacle",
+			"normalVectorEnd",
+			"bounces",
+			"getClosestIntersectionLine",
+			"pointerData",
+			"segment",
+			"Segment",
+			"segment",
+			"currentRay",
+			",",
+			": ",
+			"ray",
+			"AIM_LINE_LENGTH",
+			"timestamp",
+			"this",
+			"pointerUpEvent",
+			"running",
+			"'",
+			"this",
+			"minimumDistance",
+			"intersect",
+			"this",
+			"d",
+			"this",
+			"100",
+			"390",
+			"340",
+			"350",
+			"499",
+			"500",
+			"700",
+			"50",
+			"ctx",
+			"this",
+			"LINE_LENGTH",
 			"drawline",
 			"defaults",
 			"offsetX",
@@ -914,75 +963,7 @@
 			"border",
 			"closestBorder",
 			"borders",
-			"drawBox",
-			"ErrorInterceptor",
-			"Backdrop Click",
-			"lyout",
-			"bold",
-			"action",
-			"title",
-			"action-desc",
-			"mod-display-flex",
-			"flex",
-			"action-description",
-			"letter-spacing",
-			"blue",
-			"@blue-3",
-			"learn-more",
-			"enms",
-			"trendingStatuses",
-			"enums",
-			"modelcha",
-			"applicant",
-			"applicants",
-			"isLoaded",
-			"applicants",
-			"canSubmit",
-			"DefaultNeogovStatisticsEnabled",
-			"customfields",
-			"getCustomFieldModels",
-			"custom-fields-list",
-			"customFields",
-			"customFieldsControls",
-			"column",
-			"colum",
-			"column",
-			"columns",
-			"IGridColumn",
-			"card.id",
-			".id",
-			"onselected",
-			"onPaymentOptionSelected",
-			" ngOnChanges",
-			"ngChanges",
-			"isVisible",
-			"state",
-			"applyStateFromView",
-			"getConfiguration",
-			"load",
-			"labels",
-			"depart",
-			"urn obj.values[0].for",
-			"g.target-markers",
-			"flex: 1",
-			"mod-flex",
-			".config",
-			"white",
-			"tn-his",
-			"form-group",
-			"borderRadius",
-			"columnLabels.linePadding",
-			"columnLabels",
-			"margins",
-			"extraTopSpaceRatio",
-			"aspectRatio",
-			"1",
-			"AllowPermissionRouteGuard",
-			"AllowClaimRouteGuard",
-			"ExportGridToCsv",
-			"boost",
-			"hasPermissionToBoostJob",
-			", "
+			"drawBox"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1016,85 +997,33 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6905,
+						"buffer_size": 10777,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6192,
-								6080
+								4769,
+								5461
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"translate_tabs_to_spaces": false,
+							"typescript_plugin_format_options":
+							{
+								"convertTabsToSpaces": false,
+								"indentSize": 4,
+								"tabSize": 4
+							}
 						},
 						"translation.x": 0.0,
-						"translation.y": 1937.0,
+						"translation.y": 2160.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "scripts/vector.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 500,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								185,
-								194
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "scripts/helpers.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5257,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3451,
-								3451
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1035.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -1160,6 +1089,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"help",
+				"scripts\\helpers.js"
+			],
 			[
 				"jobhealth servi",
 				"InsightWebApp\\src\\app\\job-health\\job-health.service.ts"
@@ -1667,10 +1600,6 @@
 			[
 				"interfaces. ge",
 				"src\\watts\\generated\\interfaces.ts"
-			],
-			[
-				"auth.service",
-				"src\\app\\auth\\auth.service.ts"
 			]
 		],
 		"width": 0.0
@@ -1683,7 +1612,7 @@
 		[
 			[
 				"",
-				"C:\\Projects\\aurora.sublime.sublime-project"
+				"C:\\Projects\\insight.v4.sublime-project"
 			]
 		],
 		"width": 380.0
