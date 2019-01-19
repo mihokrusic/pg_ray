@@ -37,6 +37,12 @@
 	canvas.addEventListener("mousemove", (event) => onMouseMove(event));
 	canvas.addEventListener("mouseup", (event) => onMouseUp(event));
 	canvas.addEventListener("mousedown", (event) => onMouseDown(event));
+
+	canvas.addEventListener("touchstart", (event) => onTouchStart(event), false);
+	canvas.addEventListener("touchend", (event) => onTouchEnd(event), false);
+	canvas.addEventListener("touchcancel", (event) => onTouchCancel(event), false);
+	canvas.addEventListener("touchmove", (event) => onTouchMove(event), false);
+
 	canvas.addEventListener("keyup", (event) => onKeyUp(event));
 
 	// Initialize states
@@ -55,15 +61,25 @@
 	function onMouseMove(event) {
 		states.current.onMouseMove(event);
 	}
-
-
 	function onMouseUp(event) {
 		states.current.onMouseUp(event);
 	}
-
-
 	function onMouseDown(event) {
 		states.current.onMouseDown(event);
+	}
+
+
+	function onTouchStart(event) {
+		states.current.onTouchStart(event);
+	}
+	function onTouchEnd(event) {
+		states.current.onTouchEnd(event);
+	}
+	function onTouchCancel(event) {
+		states.current.onTouchCancel(event);
+	}
+	function onTouchMove(event) {
+		states.current.onTouchMove(event);
 	}
 
 

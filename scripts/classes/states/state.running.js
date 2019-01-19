@@ -9,18 +9,6 @@ class RunningState extends State {
         this.rays = [];
     }
 
-    onMouseMove(event) {
-        super.onMouseMove(event);
-    }
-
-    onMouseDown(event) {
-        super.onMouseDown(event);
-    }
-
-    onMouseUp(event) {
-        super.onMouseUp(event);
-    }
-
     onKeyUp(event) {
         super.onKeyUp(event);
 
@@ -185,7 +173,7 @@ class RunningState extends State {
             });
         });
 
-        if (this.pointerDownEvent && !this.pointerUpEvent) {
+        if (this.pointerMoveEvent && this.pointerDownEvent && !this.pointerUpEvent) {
             helpers.drawLine(this.context, this.pointerDownEvent, this.pointerMoveEvent, "#44E500", 1);
         }
     }

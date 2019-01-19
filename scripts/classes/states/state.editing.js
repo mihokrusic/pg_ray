@@ -11,14 +11,6 @@ class EditingState extends State {
 		console.log("editing, activate!");
 	}
 
-	onMouseMove(event) {
-		super.onMouseMove(event);
-	}
-
-	onMouseDown(event) {
-		super.onMouseDown(event);
-	}
-
 	onMouseUp(event) {
 		super.onMouseUp(event);
 

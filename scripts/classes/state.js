@@ -62,10 +62,26 @@ class State {
 		this.pointerUpEvent.button = event.button;
 	}
 
+
+	onTouchStart(event) {
+		this.pointerDownEvent = this._getCordinatesFromEvent(event.touches[0]);
+	}
+	onTouchEnd(event) {
+		this.pointerUpEvent = this._getCordinatesFromEvent(event.changedTouches[0]);
+	}
+	onTouchCancel(event) {
+		this.pointerDownEvent = null;
+		this.pointerUpEvent = null;
+	}
+	onTouchMove(event) {
+		this.pointerMoveEvent = this._getCordinatesFromEvent(event.touches[0]);
+	}
+
+
 	onKeyUp(event) {}
 
-	onUpdate(dt) {}
 
+	onUpdate(dt) {}
 	onRender(dt) {}
 
 	/*
