@@ -20,14 +20,14 @@
 		document.getElementById('runPauseButton').innerHTML = (states.current.running ? 'Pause' : 'Run');
 		states.current = states.running;
 		states.current.activate();
+	};
 
-	}
 	window.edit = function() {
 		document.getElementById('runPauseButton').innerHTML = 'Run';
 		document.getElementById('editButton').setAttribute("disabled","disabled");
 		states.current = states.editing;
 		states.current.activate();
-	}
+	};
 
 	// Create & start
 	canvas = document.getElementById('gameCanvas');
@@ -36,6 +36,7 @@
 
 	canvas.addEventListener("mousemove", (event) => onMouseMove(event));
 	canvas.addEventListener("mouseup", (event) => onMouseUp(event));
+	canvas.addEventListener("mousedown", (event) => onMouseDown(event));
 	canvas.addEventListener("keyup", (event) => onKeyUp(event));
 
 	// Initialize states
@@ -43,7 +44,7 @@
 		current: null,
 		running: new RunningState(canvas),
 		editing: new EditingState(canvas)
-	}
+	};
 	states.current = states.running;
 
 	animationHandle = window.requestAnimationFrame((timestamp) => onUpdate(timestamp));
@@ -58,12 +59,17 @@
 
 	function onMouseUp(event) {
 		states.current.onMouseUp(event);
-	};
+	}
+
+
+	function onMouseDown(event) {
+		states.current.onMouseDown(event);
+	}
 
 
 	function onKeyUp(event) {
 		states.current.onKeyUp(event);
-	};
+	}
 
 
 	function onUpdate(timestamp) {

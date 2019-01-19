@@ -20,18 +20,18 @@ class Vector {
 
 	addVector(vector) {
 		return new Vector(this.x + vector.x, this.y + vector.y);
-	};
+	}
 
 	substract(vector) {
 		return new Vector(this.x - vector.x, this.y + vector.y);
-	};
+	}
 
 	substractFrom(vector) {
 		return new Vector(vector.x - this.x, vector.y + this.y);
-	};
+	}
 
 	multiplyByScalar(scalar) {
 		return new Vector(this.x * scalar, this.y * scalar);
-	};
+	}
 }
 

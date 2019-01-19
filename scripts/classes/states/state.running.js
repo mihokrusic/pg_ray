@@ -164,7 +164,7 @@ class RunningState extends State {
 		    	segment.endPosition = segment.vector.multiplyByScalar(segment.length).addVector(segment.position);
 
 		    	segmentIndex++;
-	    	};
+	    	}
 
 	    	ray.segments = ray.segments.filter((segment) => !segment.finished);
 	    });
