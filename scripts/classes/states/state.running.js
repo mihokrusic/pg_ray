@@ -11,11 +11,21 @@ class RunningState extends State {
 
     onKeyUp(event) {
         super.onKeyUp(event);
-
         switch (event.keyCode)
         {
             case 32: // SPACE
                 this.running = !this.running;
+                break;
+            // TESTS
+            case 49: // 1
+                this.pointerUpEvent = { x: 348, y: -142};
+                this.pointerDownEvent = { x: 200, y: -52};
+                this.pointerMoveEvent = this.pointerUpEvent;
+                break;
+            case 50: // 2
+                this.pointerUpEvent = { x: 372, y: -135};
+                this.pointerDownEvent = { x: 207, y: -91};
+                this.pointerMoveEvent = this.pointerUpEvent;
                 break;
         }
     }
@@ -92,8 +102,10 @@ class RunningState extends State {
 
                 var distanceToIntersection = helpers.distanceBetweenTwoPoints(newPosition, segment.intersectionPoint);
                 var maxMoveSegmentAmount = Math.min(distanceToIntersection, RAY_LENGTH);
-
-                if (maxMoveSegmentAmount < segment.length && !segment.bounced) {
+console.log(ray);
+console.log("segmentIndex, distanceToIntersection, maxMoveSegmentAmount, length");
+console.log(segmentIndex, distanceToIntersection, maxMoveSegmentAmount, segment.length);
+                if (!segment.bounced && maxMoveSegmentAmount < segment.length) {
                     ray.bounces++;
 
                     segment.bounced = true;

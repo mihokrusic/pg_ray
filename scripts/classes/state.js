@@ -51,15 +51,13 @@ class State {
 	onMouseMove(event) {
 		this.pointerMoveEvent = this._getCordinatesFromEvent(event);
 	}
-
 	onMouseDown(event) {
 		this.pointerDownEvent = this._getCordinatesFromEvent(event);
-		this.pointerDownEvent.button = event.button;
+		//this.pointerDownEvent.button = event.button;
 	}
-
 	onMouseUp(event) {
 		this.pointerUpEvent = this._getCordinatesFromEvent(event);
-		this.pointerUpEvent.button = event.button;
+		//this.pointerUpEvent.button = event.button;
 	}
 
 
