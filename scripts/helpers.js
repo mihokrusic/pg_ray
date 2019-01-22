@@ -109,7 +109,7 @@
 
     function drawRay(context, ray, color) {
         context.beginPath();
-        context.moveTo(ray.position.x, ray.position.y);
+        context.moveTo(ray.startPosition.x, ray.startPosition.y);
         context.lineTo(ray.endPosition.x, ray.endPosition.y);
         context.strokeStyle = color;
         context.lineWidth = 2;

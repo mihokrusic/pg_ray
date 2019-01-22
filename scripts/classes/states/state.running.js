@@ -71,8 +71,8 @@ class RunningState extends State {
                         bounced: false,
                         vector: this.currentRay.vector,
                         length: 0,
-                        position: this.pointerDownEvent,
-                        endPosition: null,
+                        startPosition: this.pointerDownEvent,
+                        endPosition: this.pointerDownEvent,
                         intersectionPoint: this.currentRay.intersectionPoint,
                         nextObstacle: this.currentRay.nextObstacle,
                         sideOfObstacle: this.currentRay.sideOfObstacle,
@@ -95,76 +95,86 @@ class RunningState extends State {
         this.rays.forEach((ray) => {
             var segmentIndex = 0;
             var segment;
+            var bounceOverflow;
             while (segmentIndex < ray.segments.length) {
                 segment = ray.segments[segmentIndex];
+                bounceOverflow = 0;
 
-                var newPosition = segment.vector.multiplyByScalar(frameMoveAmount).addVector(segment.position);
+                var distanceToIntersection = helpers.distanceBetweenTwoPoints(segment.endPosition, segment.intersectionPoint);
+                var maxMoveSegmentAmount = Math.min(distanceToIntersection, frameMoveAmount);
+                bounceOverflow = frameMoveAmount > distanceToIntersection ? frameMoveAmount - distanceToIntersection : 0;
 
-                var distanceToIntersection = helpers.distanceBetweenTwoPoints(newPosition, segment.intersectionPoint);
-                var maxMoveSegmentAmount = Math.min(distanceToIntersection, RAY_LENGTH);
-console.log(ray);
-console.log("segmentIndex, distanceToIntersection, maxMoveSegmentAmount, length");
-console.log(segmentIndex, distanceToIntersection, maxMoveSegmentAmount, segment.length);
-                if (!segment.bounced && maxMoveSegmentAmount < segment.length) {
+                if (!segment.bounced && bounceOverflow > 0) {
                     ray.bounces++;
-
                     segment.bounced = true;
 
                     if (ray.bounces < RAY_MAX_BOUNCES) {
-                        var interSectionCheck = segment.reflectionVector.multiplyByScalar(INTERSECTION_CHECK_LINE_LENGTH).addVector(segment.intersectionPoint);
-                        var closestIntersection = helpers.getClosestIntersectionLine(segment.intersectionPoint, interSectionCheck, this.obstacles);
+                        var newSegment = {
+                            finished: false,
+                            bounced: false,
+                            vector: segment.reflectionVector,
+                            length: 0,
+                            startPosition: segment.intersectionPoint,
+                            endPosition: segment.intersectionPoint
+                        };
 
-                        if (closestIntersection.obstacle) {
-                            var newSegmentSideofObstacle = helpers.checkSideOfLine(closestIntersection.obstacle, segment.intersectionPoint);
+                        var interSectionCheck = newSegment.vector.multiplyByScalar(INTERSECTION_CHECK_LINE_LENGTH).addVector(newSegment.startPosition);
+                        var closestIntersection = helpers.getClosestIntersectionLine(newSegment.startPosition, interSectionCheck, this.obstacles);
 
-                            var newSegment = {
-                                finished: false,
-                                bounced: false,
-                                vector: segment.reflectionVector,
-                                length: 0,
-                                position: segment.intersectionPoint,
-                                endPosition: null,
-                                intersectionPoint: closestIntersection.point,
-                                nextObstacle: closestIntersection.obstacle,
-                                sideOfObstacle: newSegmentSideofObstacle,
-                            };
-
-                            // Normal vector
-                            var normalVector = helpers.getNormalVector(newSegment.nextObstacle, newSegment.intersectionPoint, newSegmentSideofObstacle);
-                            newSegment.normalVector = normalVector.vector;
-                            newSegment.normalVectorEndPoint = normalVector.endPoint;
-
-                            // Reflection vector
-                            var reflectionVector = helpers.getReflectionVector(newSegment.vector, newSegment.normalVector, newSegment.intersectionPoint);
-                            newSegment.reflectionVector = reflectionVector.vector;
-                            newSegment.reflectionVectorEndPoint = reflectionVector.endPoint;
-
-                            ray.segments.push(newSegment);
+                        if (!closestIntersection.obstacle) {
+                            console.error("Can't find next intersection!");
                         }
+
+                        newSegment.intersectionPoint = closestIntersection.point;
+                        newSegment.nextObstacle = closestIntersection.obstacle;
+                        newSegment.sideOfObstacle = helpers.checkSideOfLine(closestIntersection.obstacle, newSegment.startPosition);
+
+                        // Normal vector
+                        var normalVector = helpers.getNormalVector(newSegment.nextObstacle, newSegment.intersectionPoint, newSegment.sideOfObstacle);
+                        newSegment.normalVector = normalVector.vector;
+                        newSegment.normalVectorEndPoint = normalVector.endPoint;
+
+                        // Reflection vector
+                        var reflectionVector = helpers.getReflectionVector(newSegment.vector, newSegment.normalVector, newSegment.intersectionPoint);
+                        newSegment.reflectionVector = reflectionVector.vector;
+                        newSegment.reflectionVectorEndPoint = reflectionVector.endPoint;
+
+                        ray.segments.push(newSegment);
                     }
                 }
 
-                if (!segment.bounced) {
-                    segment.length += frameMoveAmount;
-                    if (segment.length > maxMoveSegmentAmount)
-                        segment.length = maxMoveSegmentAmount;
+                if (segment.bounced) {
+                    if (segmentIndex === 0 || ray.segments[segmentIndex-1].finished) {
+                        segment.length -= frameMoveAmount;
+                    }
                 } else {
-                    segment.length = maxMoveSegmentAmount;
+                    segment.length += (bounceOverflow + frameMoveAmount);
+                    if (segment.length > RAY_LENGTH)
+                        segment.length = RAY_LENGTH;
                 }
 
-                var currentSideOfObstacle = helpers.checkSideOfLine(segment.nextObstacle, newPosition);
+                //
+                if (segmentIndex === 0 && (segment.length === RAY_LENGTH || segment.bounced)) {
+                    segment.startPosition = segment.vector.multiplyByScalar(frameMoveAmount).addVector(segment.startPosition);
+                }
+                if (!segment.bounced) {
+                    segment.endPosition = segment.vector.multiplyByScalar(segment.length).addVector(segment.startPosition);
+                }
+
+                var currentSideOfObstacle = helpers.checkSideOfLine(segment.nextObstacle, segment.startPosition);
                 if (segment.sideOfObstacle !== currentSideOfObstacle) {
                     segment.finished = true;
                 }
-
-                if (segmentIndex === 0 && (segment.length === RAY_LENGTH || segment.bounced))
-                    segment.position = newPosition;
-                segment.endPosition = segment.vector.multiplyByScalar(segment.length).addVector(segment.position);
 
                 segmentIndex++;
             }
 
             ray.segments = ray.segments.filter((segment) => !segment.finished);
+            // console.log(ray.segments[0] && ray.segments[0].length);
+
+            console.log(_.sumBy(ray.segments, function(segment) {
+                return helpers.distanceBetweenTwoPoints(segment.startPosition, segment.endPosition);
+            }));
         });
 
         this.rays = this.rays.filter((ray) => ray.segments.length > 0);

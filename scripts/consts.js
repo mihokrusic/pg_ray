@@ -9,4 +9,4 @@ window.RAY_MAX_BOUNCES = 50;
 
 window.MIN_DISTANCE_INTERSECTION_TRIGGER = 0.1;
 
-window.DRAW_DEBUG_LINES = true;
+window.DRAW_DEBUG_LINES = false;
