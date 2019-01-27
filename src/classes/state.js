@@ -12,7 +12,7 @@ let globalObstacles = [
 	{ from: { x: 50, y: -50 }, to: { x: 300, y: 100 }, selected: false },
 ];
 
-class State {
+export class State {
 
 	constructor(canvas) {
 		if (new.target === State) {

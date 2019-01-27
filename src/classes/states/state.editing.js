@@ -1,4 +1,6 @@
-class EditingState extends State {
+import { State } from './../state';
+
+export class EditingState extends State {
 
 	constructor(canvas) {
 		super(canvas);
