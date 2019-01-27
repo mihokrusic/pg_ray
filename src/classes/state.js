@@ -29,11 +29,6 @@ export class State {
 
 		// TODO: maybe somewhere else?
 		this.rays = [];
-		this.currentRay = {
-			vector: {},
-			position: {}
-		};
-
 		this.obstacles = globalObstacles;
 	}
 

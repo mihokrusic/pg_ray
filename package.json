@@ -3,9 +3,11 @@
     "version": "1.0.0",
     "description": "",
     "private": true,
-    "scripts": {},
     "author": "",
     "license": "ISC",
+    "scripts": {
+        "build": "npx webpack"
+    },
     "devDependencies": {
         "path": "^0.12.7",
         "webpack": "^4.29.0",

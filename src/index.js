@@ -3,9 +3,8 @@ import { EditingState } from './classes/states/state.editing';
 import Helpers from './helpers';
 
 /* TODO
-	- move to typescript
-	- gulp to automatically transpile
-	- module loader instead of including everything
+    - move to typescript
+    - break helper into separate files
 	- double buffer
 	- state machine for different states (running, editing, paused...)
 	- cordinate system for canvas?
@@ -87,18 +86,6 @@ function onTouchMove(event) {
 
 function onKeyUp(event) {
     states.current.onKeyUp(event);
-    // if (event.keyCode === 81) {
-    // 	var dt = 0.015;
-
-    // 	// update state
-    // 	states.current.onUpdate(dt);
-
-    // 	// render
-    // 	context.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
-    // 	Helpers.drawGrid(context, canvas);
-
-    // 	states.current.onRender(dt);
-    // }
 }
 
 
