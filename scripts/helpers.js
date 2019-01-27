@@ -60,6 +60,11 @@
         return Math.sign((point.x - line.from.x) * (line.to.y - line.from.y) - (point.y - line.from.y) * (line.to.x - line.from.x));
     }
 
+    // Dot product
+    function dotProduct(vector1, vector2) {
+        return (vector1.x * vector2.x) + (vector1.y * vector2.y);
+    }
+
     function radToDeg(rad) {
         return rad * (180 / Math.PI);
     }
@@ -67,12 +72,6 @@
     function degToRad(deg) {
         return deg * (Math.PI / 180);
     }
-
-    function dotProduct(vector1, vector2) {
-        return (vector1.x * vector2.x) + (vector1.y * vector2.y);
-    }
-
-
 
     function drawGrid(context, canvas) {
         //drawLine(context, { x: 0, y: -canvas.height / 2 }, { x: 0, y: canvas.height / 2 }, "silver", .5);

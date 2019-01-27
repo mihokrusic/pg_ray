@@ -85,40 +85,39 @@
 
 	function onKeyUp(event) {
 		states.current.onKeyUp(event);
+		// if (event.keyCode === 81) {
+		// 	var dt = 0.015;
 
-		if (event.keyCode === 81) {
-			var dt = 0.02;
+		// 	// update state
+		// 	states.current.onUpdate(dt);
 
-			// update state
-			states.current.onUpdate(dt);
+		// 	// render
+		// 	context.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+		// 	helpers.drawGrid(context, canvas);
 
-			// render
-			context.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
-			helpers.drawGrid(context, canvas);
-
-			states.current.onRender(dt);
-		}
+		// 	states.current.onRender(dt);
+		// }
 	}
 
 
 	function onUpdate(timestamp) {
-		// if (!lastTimestamp)
-		// 	lastTimestamp = timestamp;
+		if (!lastTimestamp)
+			lastTimestamp = timestamp;
 
-		// var dt = (timestamp - lastTimestamp) / 1000;
+		var dt = (timestamp - lastTimestamp) / 1000;
 
-		// // update state
-		// states.current.onUpdate(dt);
+		// update state
+		states.current.onUpdate(dt);
 
-		// // render
-	    // context.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
-	    // helpers.drawGrid(context, canvas);
+		// render
+	    context.clearRect(-canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+	    helpers.drawGrid(context, canvas);
 
-	    // states.current.onRender(dt);
+	    states.current.onRender(dt);
 
-	    // // timing
-	  	// lastTimestamp = timestamp;
-		// animationHandle = window.requestAnimationFrame((timestamp) => onUpdate(timestamp));
+	    // timing
+	  	lastTimestamp = timestamp;
+		animationHandle = window.requestAnimationFrame((timestamp) => onUpdate(timestamp));
 	}
 
 })(window);
