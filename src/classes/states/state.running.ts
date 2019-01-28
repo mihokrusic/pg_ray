@@ -1,11 +1,15 @@
 import { State } from './../state';
 import { Vector } from './../vector';
+import { Ray, ISegment } from './../ray';
 import Constants from './../../constants';
-import Helpers from './../../helpers';
+import drawingHelper from '../../helpers/drawing.helper';
+import geometryHelper from '../../helpers/geometry.helper';
 
 export class RunningState extends State {
 
-    constructor(canvas) {
+    private running: boolean;
+
+    constructor(canvas: HTMLCanvasElement) {
         super(canvas);
         this.running = true;
     }
@@ -14,7 +18,7 @@ export class RunningState extends State {
         this.rays = [];
     }
 
-    onKeyUp(event) {
+    onKeyUp(event: KeyboardEvent) {
         super.onKeyUp(event);
         switch (event.keyCode)
         {
@@ -24,14 +28,7 @@ export class RunningState extends State {
         }
     }
 
-    /*
-    MOVE
-    */
-    getRayLength(ray) {
-        return _.sumBy(ray.segments, function(segment) { return segment.finished ? 0 : Helpers.distanceBetweenTwoPoints(segment.startPosition, segment.endPosition); });
-    }
-
-    onUpdate(dt) {
+    onUpdate(dt: number) {
         // Fire ray
         if (this.pointerUpEvent) {
             this.fireRay(dt);
@@ -40,60 +37,60 @@ export class RunningState extends State {
         this.calculateRayPositions(dt);
     }
 
-    fireRay(dt) {
+    fireRay(dt: number) {
         // Calculate next ray properties
         var angle = Math.atan2(this.pointerUpEvent.y - this.pointerDownEvent.y, this.pointerUpEvent.x - this.pointerDownEvent.x);
         var newRayVector = new Vector(Math.cos(angle), Math.sin(angle)).normalize(); // TODO: double creation, blah
 
-        var interSectionCheck = newRayVector.multiplyByScalar(Constants.ray.intersectionCheckLineLength).addVector(this.pointerDownEvent);
-        var closestIntersection = Helpers.getClosestIntersectionLine(this.pointerDownEvent, interSectionCheck, this.obstacles);
+        var interSectionCheck = newRayVector.multiplyByScalar(Constants.ray.intersectionCheckLineLength).add(this.pointerDownEvent);
+        var closestIntersection = geometryHelper.getClosestIntersectionLine(this.pointerDownEvent, interSectionCheck, this.obstacles);
 
         if (!closestIntersection.obstacle) {
             console.error("Can't find next intersection!");
         }
 
-        var newRaySegment = {
+        var newRaySegment: ISegment = {
             finished: false,
             bounced: false,
             vector: newRayVector,
             startPosition: this.pointerDownEvent,
             endPosition: this.pointerDownEvent,
             intersectionPoint: closestIntersection.point,
-            nextObstacle: closestIntersection.obstacle
+            nextObstacle: closestIntersection.obstacle,
         };
 
-        newRaySegment.sideOfObstacle = Helpers.checkSideOfLine(newRaySegment.nextObstacle, newRaySegment.startPosition);
+        newRaySegment.sideOfObstacle = geometryHelper.checkSideOfLine(newRaySegment.nextObstacle, newRaySegment.startPosition);
 
         // Normal vector
-        var normalVector = Helpers.getNormalVector(newRaySegment.nextObstacle, newRaySegment.intersectionPoint, newRaySegment.sideOfObstacle);
+        var normalVector = geometryHelper.getNormalVector(newRaySegment.nextObstacle, newRaySegment.intersectionPoint, newRaySegment.sideOfObstacle);
         newRaySegment.normalVector = normalVector.vector;
         newRaySegment.normalVectorEndPoint = normalVector.endPoint;
 
         // Reflection vector
-        var reflectionVector = Helpers.getReflectionVector(newRaySegment.vector, newRaySegment.normalVector, newRaySegment.intersectionPoint);
+        var reflectionVector = geometryHelper.getReflectionVector(newRaySegment.vector, newRaySegment.normalVector, newRaySegment.intersectionPoint);
         newRaySegment.reflectionVector = reflectionVector.vector;
         newRaySegment.reflectionVectorEndPoint = reflectionVector.endPoint;
 
-        this.rays.push({
-            boucnes: 0,
-            segments: [newRaySegment]
-        });
+        var newRay = new Ray();
+        newRay.addSegment(newRaySegment);
+
+        this.rays.push(newRay);
 
         this.pointerUpEvent = null;
         this.pointerDownEvent = null;
     }
 
-    calculateRayPositions(dt) {
+    calculateRayPositions(dt: number) {
         var frameMoveAmount = dt * Constants.ray.speed;
 
-        this.rays.forEach((ray) => {
+        this.rays.forEach((ray: Ray) => {
 
-            let currentRayLength = this.getRayLength(ray);
-            let newSegments = [];
+            let currentRayLength = ray.length;
+            let newSegments: ISegment[] = [];
 
-            ray.segments.forEach((segment, index) => {
-                let currentSegmentLength = Helpers.distanceBetweenTwoPoints(segment.startPosition, segment.endPosition);
-                let distanceToIntersection = Helpers.distanceBetweenTwoPoints(segment.endPosition, segment.intersectionPoint);
+            ray.segments.forEach((segment: ISegment, index: number) => {
+                let currentSegmentLength = geometryHelper.distanceBetweenTwoPoints(segment.startPosition, segment.endPosition);
+                let distanceToIntersection = geometryHelper.distanceBetweenTwoPoints(segment.endPosition, segment.intersectionPoint);
 
                 let maxSegmentMoveAmount = Math.min(frameMoveAmount, distanceToIntersection);
                 let remainderMove = frameMoveAmount - maxSegmentMoveAmount;
@@ -109,17 +106,20 @@ export class RunningState extends State {
                 let justBounced = false;
                 if (!segment.bounced && (distanceToIntersection - maxSegmentMoveAmount < 0.001)) {
                     justBounced = true;
-                    ray.bounces++;
+                    // TODO ray.bounces++;
 
                     while (remainderMove > 0) {
-                        var newSegment = {
+
+                        var newSegment: ISegment = {
                             finished: false,
                             bounced: false,
                             vector: segment.reflectionVector,
                             startPosition: segment.intersectionPoint,
-                        };
-                        var interSectionCheck = newSegment.vector.multiplyByScalar(Constants.ray.intersectionCheckLineLength).addVector(newSegment.startPosition);
-                        var closestIntersection = Helpers.getClosestIntersectionLine(newSegment.startPosition, interSectionCheck, this.obstacles);
+                            endPosition: segment.intersectionPoint,
+                        }
+
+                        var interSectionCheck = newSegment.vector.multiplyByScalar(Constants.ray.intersectionCheckLineLength).add(newSegment.startPosition);
+                        var closestIntersection = geometryHelper.getClosestIntersectionLine(newSegment.startPosition, interSectionCheck, this.obstacles);
 
                         if (!closestIntersection.obstacle) {
                             console.error("Can't find next intersection!");
@@ -127,20 +127,20 @@ export class RunningState extends State {
 
                         newSegment.intersectionPoint = closestIntersection.point;
                         newSegment.nextObstacle = closestIntersection.obstacle;
-                        newSegment.sideOfObstacle = Helpers.checkSideOfLine(closestIntersection.obstacle, newSegment.startPosition);
+                        newSegment.sideOfObstacle = geometryHelper.checkSideOfLine(closestIntersection.obstacle, newSegment.startPosition);
 
-                        var newSegmentDistanceToIntersection = Helpers.distanceBetweenTwoPoints(newSegment.startPosition, newSegment.intersectionPoint);
+                        var newSegmentDistanceToIntersection = geometryHelper.distanceBetweenTwoPoints(newSegment.startPosition, newSegment.intersectionPoint);
                         var newSegmentMoveAmount = Math.min(remainderMove, newSegmentDistanceToIntersection);
 
-                        newSegment.endPosition = newSegment.vector.multiplyByScalar(newSegmentMoveAmount).addVector(newSegment.startPosition);
+                        newSegment.endPosition = newSegment.vector.multiplyByScalar(newSegmentMoveAmount).add(newSegment.startPosition);
 
                         // Normal vector
-                        var normalVector = Helpers.getNormalVector(newSegment.nextObstacle, newSegment.intersectionPoint, newSegment.sideOfObstacle);
+                        var normalVector = geometryHelper.getNormalVector(newSegment.nextObstacle, newSegment.intersectionPoint, newSegment.sideOfObstacle);
                         newSegment.normalVector = normalVector.vector;
                         newSegment.normalVectorEndPoint = normalVector.endPoint;
 
                         // Reflection vector
-                        var reflectionVector = Helpers.getReflectionVector(newSegment.vector, newSegment.normalVector, newSegment.intersectionPoint);
+                        var reflectionVector = geometryHelper.getReflectionVector(newSegment.vector, newSegment.normalVector, newSegment.intersectionPoint);
                         newSegment.reflectionVector = reflectionVector.vector;
                         newSegment.reflectionVectorEndPoint = reflectionVector.endPoint;
 
@@ -150,11 +150,11 @@ export class RunningState extends State {
                 }
 
                 if (!segment.finished && moveStartPosition > 0) {
-                    segment.startPosition = segment.vector.multiplyByScalar(moveStartPosition).addVector(segment.startPosition);
+                    segment.startPosition = segment.vector.multiplyByScalar(moveStartPosition).add(segment.startPosition);
                 }
 
                 if (!segment.bounced) {
-                    segment.endPosition = segment.vector.multiplyByScalar(maxSegmentMoveAmount).addVector(segment.endPosition);
+                    segment.endPosition = segment.vector.multiplyByScalar(maxSegmentMoveAmount).add(segment.endPosition);
                 }
 
                 if (!segment.bounced) {
@@ -162,31 +162,31 @@ export class RunningState extends State {
                 }
             });
 
-            ray.segments.push(...newSegments);
-            ray.segments = ray.segments.filter((segment) => !segment.finished);
+            ray.addSegments(newSegments);
+            ray.removeFinishedSegments();
         });
 
         this.rays = this.rays.filter((ray) => ray.segments.length > 0);
     }
 
-    onRender(dt) {
-        Helpers.drawObstacles(this.context, this.obstacles);
+    onRender(dt: number) {
+        drawingHelper.drawObstacles(this.context, this.obstacles);
 
         // Rays
         this.rays.forEach((ray) => {
             ray.segments.forEach((segment) => {
-                Helpers.drawRay(this.context, segment, "green");
+                drawingHelper.drawRaySegment(this.context, segment, "green");
 
                 if (Constants.debugLines) {
-                    Helpers.drawLine(this.context, segment.intersectionPoint, segment.normalVectorEndPoint, "orange", 1);
-                    Helpers.drawLine(this.context, segment.intersectionPoint, segment.reflectionVectorEndPoint, "blue", 1);
-                    Helpers.drawCircle(this.context, segment.intersectionPoint, 4, "#91C8FF");
+                    drawingHelper.drawLine(this.context, segment.intersectionPoint, segment.normalVectorEndPoint, "orange", 1);
+                    drawingHelper.drawLine(this.context, segment.intersectionPoint, segment.reflectionVectorEndPoint, "blue", 1);
+                    drawingHelper.drawCircle(this.context, segment.intersectionPoint, 4, "#91C8FF");
                 }
             });
         });
 
         if (this.pointerMoveEvent && this.pointerDownEvent && !this.pointerUpEvent) {
-            Helpers.drawLine(this.context, this.pointerDownEvent, this.pointerMoveEvent, "#44E500", 1);
+            drawingHelper.drawLine(this.context, this.pointerDownEvent, this.pointerMoveEvent, "#44E500", 1);
         }
     }
 

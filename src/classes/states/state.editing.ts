@@ -1,19 +1,21 @@
 import { State } from './../state';
+import { IPoint } from '../vector';
+import drawingHelper from '../../helpers/drawing.helper';
 
 export class EditingState extends State {
 
-	constructor(canvas) {
-		super(canvas);
+	private firstPoint: IPoint = null;
+	private lastPoint: IPoint = null;
 
-		this.firstPoint = null;
-		this.lastPoint = null;
+	constructor(canvas: HTMLCanvasElement) {
+		super(canvas);
 	}
 
 	activate() {
 		console.log("editing, activate!");
 	}
 
-	onMouseUp(event) {
+	onMouseUp(event: MouseEvent) {
 		super.onMouseUp(event);
 
 		if (!this.firstPoint)
@@ -23,18 +25,7 @@ export class EditingState extends State {
 
 	}
 
-	onKeyUp(event) {
-		super.onKeyUp(event);
-
-		switch (event.keyCode)
-		{
-			case 32: // SPACE
-				this.running = !this.running;
-				break;
-		}
-	}
-
-	onUpdate(dt) {
+	onUpdate(dt: number) {
 		if (this.firstPoint && this.lastPoint) {
 			this.obstacles.push({
 				from: {
@@ -53,13 +44,13 @@ export class EditingState extends State {
 		}
 	}
 
-	onRender(dt) {
-	    helpers.drawObstacles(this.context, this.obstacles);
+	onRender(dt: number) {
+	    drawingHelper.drawObstacles(this.context, this.obstacles);
 
     	if (this.firstPoint) {
-	    	helpers.drawCircle(this.context, this.firstPoint, 4, "green");
-	    	helpers.drawLine(this.context, this.firstPoint, this.pointerMoveEvent, "green", 1);
-	    	helpers.drawCircle(this.context, this.pointerMoveEvent, 4, "green");
+	    	drawingHelper.drawCircle(this.context, this.firstPoint, 4, "green");
+	    	drawingHelper.drawLine(this.context, this.firstPoint, this.pointerMoveEvent, "green", 1);
+	    	drawingHelper.drawCircle(this.context, this.pointerMoveEvent, 4, "green");
     	}
 	}
 
