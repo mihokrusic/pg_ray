@@ -1,3 +1,8 @@
+interface IRayBounceConstants {
+    bounceSpeed: number;
+    time: number;
+}
+
 interface IRayConstants {
     speed: number;
     length: number;
@@ -6,6 +11,8 @@ interface IRayConstants {
     reflectionLineLength: number;
     intersectionCheckLineLength: number;
     minDistanceIntersectionTrigger: number;
+
+    bounce: IRayBounceConstants;
 }
 
 class Constants {
@@ -21,7 +28,12 @@ class Constants {
             normalLineLength: 25,
             reflectionLineLength: 25,
             intersectionCheckLineLength: 10000,
-            minDistanceIntersectionTrigger: 0.1
+            minDistanceIntersectionTrigger: 0.1,
+
+            bounce: {
+                bounceSpeed: 750,
+                time: 500
+            }
         };
     }
 }

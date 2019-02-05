@@ -1,6 +1,7 @@
 import { State } from './../state';
 import { IPoint } from '../vector';
 import drawingHelper from '../../helpers/drawing.helper';
+import obstacles from './../../obstacles';
 
 export class EditingState extends State {
 
@@ -27,17 +28,17 @@ export class EditingState extends State {
 
 	onUpdate(dt: number) {
 		if (this.firstPoint && this.lastPoint) {
-			this.obstacles.push({
-				from: {
-					x: this.firstPoint.x,
-					y: this.firstPoint.y
-				},
-				to: {
-					x: this.lastPoint.x,
-					y: this.lastPoint.y
-				},
-				selected: false
-			});
+			// this.obstacles.push({
+			// 	from: {
+			// 		x: this.firstPoint.x,
+			// 		y: this.firstPoint.y
+			// 	},
+			// 	to: {
+			// 		x: this.lastPoint.x,
+			// 		y: this.lastPoint.y
+			// 	},
+			// 	selected: false
+			// });
 
 			this.firstPoint = null;
 			this.lastPoint = null;
@@ -45,7 +46,7 @@ export class EditingState extends State {
 	}
 
 	onRender(dt: number) {
-	    drawingHelper.drawObstacles(this.context, this.obstacles);
+	    drawingHelper.drawObstacles(this.context, obstacles);
 
     	if (this.firstPoint) {
 	    	drawingHelper.drawCircle(this.context, this.firstPoint, 4, "green");
