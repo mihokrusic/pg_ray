@@ -9,3 +9,9 @@ jobs:
             - run:
                 name: Show current branch
                 command: echo ${CIRCLE_BRANCH}
+            - run:
+                name: NPM install
+                command: npm install
+            - run
+                name: NPM run build
+                command npm run build-prod
