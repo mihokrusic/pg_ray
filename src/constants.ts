@@ -31,8 +31,8 @@ class Constants {
             minDistanceIntersectionTrigger: 0.1,
 
             bounce: {
-                bounceSpeed: 750,
-                time: 500
+                bounceSpeed: 1000,
+                time: 0.5
             }
         };
     }

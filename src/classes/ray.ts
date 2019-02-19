@@ -33,13 +33,10 @@ export interface IRay {
 
 export class Ray implements IRay {
 
-    private _bounces: number;
-    private _segments: ISegment[];
-    private seed: number;
+    private _bounces: number = 0;
+    private _segments: ISegment[] = [];
 
 	constructor() {
-        this._bounces = 0;
-        this._segments = [];
     }
 
     get segments(): ISegment[] {
