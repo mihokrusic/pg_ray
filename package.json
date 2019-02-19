@@ -10,6 +10,7 @@
         "build-prod": "npx webpack --config webpack.config.production.js"
     },
     "devDependencies": {
+        "less-loader": "^4.1.0",
         "path": "^0.12.7",
         "ts-loader": "^5.3.3",
         "typescript": "^3.3.1",
