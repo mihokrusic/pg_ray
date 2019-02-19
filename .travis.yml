@@ -5,3 +5,8 @@ branches:
  only:
   - master
 script: npm run build-prod
+notifications:
+ email:
+  recipients:
+   - miho.krusic+travis@gmail.com
+  on_success: always
